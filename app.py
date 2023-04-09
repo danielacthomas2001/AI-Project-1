@@ -30,7 +30,11 @@ def sentiment_analysis(text, model_name):
     result = setiment_model(text)[0]
     sentiment = result['label']
     score = result['score']
-    sentiment = 'positive' if label == 'LABEL_1' else 'negative'
+    if sentiment == 'LABEL_1':
+        sentiment = 'negative'
+    else:
+        sentiment = 'positive'
+
     return sentiment, score
 
 if submit_button:
