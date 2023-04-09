@@ -19,7 +19,7 @@ default_text = "All those moments will be lost in time, like tears in rain."
 
 with st.form(key='my_form'):
     text = st.text_input("Enter Your Text Here: ", value = default_text)
-    model_name = ...
+    model_name = st.selectbox('Select Model', ('bert-base-uncased', 'distilroberta-base', 'xlm-roberta-base', 't5-base'))
     submit_button = st.form_submit_button(label = 'Submit')
 
 def sentiment_analysis(text, model_name):
