@@ -37,4 +37,4 @@ if submit_button:
     if text:
         sentiment, score = sentiment_analysis(text, model_name)
         st.write('Sentiment: ' + sentiment)
-        st.write('Score: ' + score)
+        st.write('Score: ' + str(score))
