@@ -35,7 +35,7 @@ default_text = "Your sample text goes here."
 
 with st.form(key='my_form'):
     text = st.text_input("Enter Your Text Here: ", value=default_text)
-    model_name = st.selectbox('Select Model', ('https://raw.githubusercontent.com/your-github-username/AI-Project-1/main/classifier.py',))
+    model_name = st.selectbox('Select Model', ('danielacthomas2001/toxic-tweet-classifier',))
     submit_button = st.form_submit_button(label='Submit')
 
 if submit_button:
