@@ -1,8 +1,6 @@
 ---
-title: Sentiment Analysis App
+title: Toxic Tweet Classifier
 emoji: 🌖
-colorFrom: yellow
-colorTo: blue
 sdk: streamlit
 sdk_version: 1.17.0
 app_file: app.py
