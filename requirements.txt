@@ -4,3 +4,5 @@ numpy
 easyocr
 Pillow
 transformers
+torch
+sklearn
