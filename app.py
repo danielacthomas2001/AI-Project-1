@@ -35,7 +35,7 @@ default_text = "Your sample text goes here."
 
 with st.form(key='my_form'):
     text = st.text_input("Enter Your Text Here: ", value=default_text)
-    model_name = st.selectbox('Select Model', ('your-saved-model-directory',))
+    model_name = st.selectbox('Select Model', ('https://huggingface.co/danielacthomas2001/AI-Project-1/resolve/main',))
     submit_button = st.form_submit_button(label='Submit')
 
 if submit_button:
