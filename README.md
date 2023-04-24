@@ -7,3 +7,4 @@ app_file: app.py
 pinned: false
 ---
 
+https://huggingface.co/spaces/danielacthomas2001/AI-Project-1
