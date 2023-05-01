@@ -1,69 +1,43 @@
-'''
-This code creates a Streamlit web application that allows users to perform toxic comment classification 
-using a fine-tuned model from the Hugging Face Transformers library. Users can input text and select a model 
-to classify the input text's toxicity. The results are displayed in a table format.
-'''
-
 import streamlit as st
-from transformers import AutoTokenizer, AutoModelForSequenceClassification
+from transformers import pipeline
 
-# Function to load the model with caching
-@st.cache(allow_output_mutation=True)
-def load_model(model_name):
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForSequenceClassification.from_pretrained(model_name)
-    return tokenizer, model
+# Set the title of the web application
+st.title("Sentiment Text Analysis App")
 
-# Function to classify the input text based on toxicity
-def classify_comment(text, model_name):
-    tokenizer, model = load_model(model_name)
-    inputs = tokenizer(text, return_tensors="pt", padding=True, truncation=True, max_length=256)
-    outputs = model(**inputs)
-    probabilities = outputs.logits.softmax(dim=1).detach().numpy()[0]
+# Set the subtitle of the web application
+st.markdown("## Sentiment Analyis App - Using 'streamlit'")
 
-    # Get the highest toxicity class and its probability
-    top_class_idx = probabilities.argmax()
-    top_class_label = model.config.id2label[top_class_idx]
-    top_class_prob = probabilities[top_class_idx]
+# Add some empty lines for formatting
+st.markdown("")
+st.markdown("")
+st.write("")
 
-    # Get the highest toxicity class among the 4 types and its probability
-    toxic_types = ['obscene', 'threat', 'insult', 'identity_hate']
-    toxic_types_idx = [model.config.label2id[label] for label in toxic_types]
-    toxic_types_prob = probabilities[toxic_types_idx]
-    top_toxic_type_idx = toxic_types_prob.argmax()
-    top_toxic_type_label = toxic_types[top_toxic_type_idx]
-    top_toxic_type_prob = toxic_types_prob[top_toxic_type_idx]
-
-    return top_class_label, top_class_prob, top_toxic_type_label, top_toxic_type_prob
-
-# Set the title and description of the web application
-st.title("Toxic Comment Classifier")
-st.markdown("## Input a text and choose a fine-tuned model to obtain its toxicity classification.")
+# Describe the purpose of the web application
+st.write("Input a text and choose a pre-trained model to obtain its corresponding sentiment analysis.")
 
 # Set a default text for the input field
-default_text = "Your sample text goes here."
+default_text = "All those moments will be lost in time, like tears in rain."
 
 # Create a form to input text and select a model
 with st.form(key='my_form'):
     text = st.text_input("Enter Your Text Here: ", value=default_text)
-    model_name = st.selectbox('Select Model', ('danielacthomas2001/toxic-tweet-classifier',))
+    model_name = st.selectbox('Select Model', ('bert-base-uncased', 'distilroberta-base', 'xlm-roberta-base', 't5-base'))
     submit_button = st.form_submit_button(label='Submit')
 
-# Display the toxic comment classification results when the submit button is clicked
+def sentiment_analysis(text, model_name):
+    # Loads the selected model
+    setiment_model = pipeline('sentiment-analysis', model=model_name)
+    
+    # Performs the sentiment analysis on the input text
+    result = setiment_model(text)[0]
+    sentiment = result['label']
+    score = result['score']
+
+    return sentiment, score
+
+# Display the sentiment analysis result when the submit button is clicked
 if submit_button:
     if text:
-        top_class_label, top_class_prob, top_toxic_type_label, top_toxic_type_prob = classify_comment(text, model_name)
-        st.write('Toxicity class: ' + top_class_label)
-        st.write('Probability: ' + str(top_class_prob))
-        st.write('Highest toxicity class among the 4 types: ' + top_toxic_type_label)
-        st.write('Probability: ' + str(top_toxic_type_prob))
-
-        # Display the results in a table
-        st.write(pd.DataFrame({
-            'Tweet': [text],
-            'Highest Toxicity Class': [top_class_label],
-            'Probability': [top_class_prob],
-            'Top Toxicity Class Among 4 Types': [top_toxic_type_label],
-            'Probability for Top Toxicity Class Among 4 Types': [top_toxic_type_prob]
-        }))
-
+        sentiment, score = sentiment_analysis(text, model_name)
+        st.write('Sentiment: ' + sentiment)
+        st.write('Score: ' + score)
